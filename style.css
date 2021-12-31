@@ -1,0 +1,73 @@
+html, body {
+    height: 100%;
+    font-family: "Gill Sans Extrabold", sans-serif;
+    background-color: bisque;
+}
+
+body > h1 {
+    padding: 10px;
+}
+
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+div.book {
+    width: 210px;
+    height: auto;
+    border: none;
+    background-color: rgb(166,189,158);
+    margin: 20px;
+    padding: 10px;
+    position:relative
+}
+
+div.form_container {
+    display: none;
+    border: 1px solid rgb(166,189,158);
+    width: 30%;
+    margin: auto;
+    padding: 10px;
+}
+
+div.form_display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div#btn_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+button.new_book {
+    background-color: rgb(184,72,60);
+    border: none;
+    width: 15%;
+    height: 70%;
+    color: white;
+    font-size: 15px;
+}
+
+form > div, form > p, form > button {
+    margin: 10px;
+}
+
+button.remove {
+    background-color: rgb(184,72,60);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+button.read_toggle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
