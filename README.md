@@ -4,7 +4,7 @@ A library simulation
 
 Learnings:
 1. Object, Object constructor, prototype
-2. windows localStorage
+2. window localStorage
 3. Show / hide forms
 4. Add eventListeners to dynamically generated elements
 5. Using data attribute
