@@ -9,84 +9,93 @@ const READ_COLOR = "green";
 
 const LIBRARY_KEY = 'library'
 
-// constructor
-function Book(title, author, numOfPages, read) {
-    this.title = title;
-    this.author = author;
-    this.numOfPages = numOfPages;
-    this.read = read;
-    this.info = function() {
-        const readStatus = read ? READ : NOT_READ;
-        return `${title} by ${author}, ${numOfPages} pages, ${readStatus}`
+class Book {
+    constructor(title, author, numOfPages, read) {
+        this.title = title;
+        this.author = author;
+        this.numOfPages = numOfPages;
+        this.read = read;       
+    }
+
+    toggleReadStatus() {
+        this.read = !this.read;
     }
 }
-Book.prototype.toggleReadStatus = function() {
-    this.read = !this.read;
+
+class Storage {
+    saveToLocalStorage(library) {
+        localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
+    }
+    
+    getFromLocalStorage() {
+        const value = localStorage.getItem(LIBRARY_KEY);
+        return value === null ? [] : JSON.parse(value);
+    }
 }
 
-function saveToLocalStorage(library) {
-    localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
-}
+class Library {
 
-function getFromLocalStorage() {
-    const value = localStorage.getItem(LIBRARY_KEY);
-    return value === null ? [] : JSON.parse(value);
-}
+    constructor(storage) {
+        this.storage = storage;
+    }
 
-displayBooks(getFromLocalStorage());
-
-function addBookToLibrary(book) {
-    const library = getFromLocalStorage()
-    if (library.length > 0) {
-        const titles = library.map(b => b.title);
-        if(titles.includes(book.title)) {
-            alert(`${book.title} already existed.`)
-            return;
+    addBookToLibrary(book) {
+        const library = this.storage.getFromLocalStorage()
+        if (library.length > 0) {
+            const titles = library.map(b => b.title);
+            if(titles.includes(book.title)) {
+                alert(`${book.title} already existed.`)
+                return;
+            }
         }
+        library.push(book);
+        storage.saveToLocalStorage(library);
     }
-    library.push(book);
-    saveToLocalStorage(library);
+    
+    displayBooks() {
+        const library = storage.getFromLocalStorage();
+        const containerDiv = _clearCurrentDiv();
+        library.forEach((book, index) => {
+            containerDiv.appendChild(_createBookDiv(book, index));
+        })
+    }
+    
+    updateBooks(index) {
+        const library = storage.getFromLocalStorage();
+        const resultBook = library[index];
+        // need to resconstruct the book
+        const book = new Book(resultBook.title, resultBook.author, resultBook.numOfPages, resultBook.read);
+        book.toggleReadStatus();
+        library[index] = book;
+    
+        const containerDiv = _clearCurrentDiv();
+        containerDiv.textContent = '';
+        storage.saveToLocalStorage(library);
+        this.displayBooks();
+    }
+    
+    removeBooks(index) {
+        const library = storage.getFromLocalStorage();
+        library.splice(index, 1);
+    
+        _clearCurrentDiv();
+        storage.saveToLocalStorage(library);
+        this.displayBooks();
+    }
 }
 
-function displayBooks(library) {
-    const containerDiv = clearCurrentDiv();
-    library.forEach((book, index) => {
-        containerDiv.appendChild(createBookDiv(book, index));
-    })
-}
+const storage = new Storage();
+const library = new Library(storage);
+library.displayBooks();
 
-function updateBooks(index) {
-    const library = getFromLocalStorage();
-    const resultBook = library[index];
-    // need to resconstruct the book
-    const book = new Book(resultBook.title, resultBook.author, resultBook.numOfPages, resultBook.read);
-    book.toggleReadStatus();
-    library[index] = book;
-
-    const containerDiv = clearCurrentDiv();
-    containerDiv.textContent = '';
-    displayBooks(library);
-    saveToLocalStorage(library);
-}
-
-function removeBooks(index) {
-    const library = getFromLocalStorage();
-    library.splice(index, 1);
-
-    clearCurrentDiv();
-
-    displayBooks(library);
-    saveToLocalStorage(library);
-}
-
-function clearCurrentDiv() {
+function _clearCurrentDiv() {
     const containerDiv = document.querySelector("div#container");
     // clear all current displayed books
     containerDiv.textContent = '';
     return containerDiv;
 }
 
-function createBookDiv(book, index) {
+function _createBookDiv(book, index) {
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
     const h1Title = document.createElement("h1");
@@ -131,12 +140,12 @@ form.addEventListener("submit", function(e) {
     const title = form.elements['title'].value;
     const author = form.elements['author'].value;
     const numOfPages = Number(form.elements['numOfPages'].value);
-    const read = form.elements['read'].value === yes ? true : false;
+    const read = form.elements['read'].value === 'yes' ? true : false;
     const book = new Book(title, author, numOfPages, read);
 
-    addBookToLibrary(book);
+    library.addBookToLibrary(book);
     closeForm();
-    displayBooks(getFromLocalStorage());
+    library.displayBooks();
 })
 
 function openForm() {
@@ -162,11 +171,11 @@ bookDivContainer.addEventListener("click", function(e) {
     const targetElement = e.target;
     if (targetElement.className === 'remove') {
         const index = Number(targetElement.dataset.index);
-        removeBooks(index)
+        library.removeBooks(index)
     }
     
     if (targetElement.className === 'read_toggle') {
         const index = Number(targetElement.dataset.index);
-        updateBooks(index)
+        library.updateBooks(index)
     }
 })

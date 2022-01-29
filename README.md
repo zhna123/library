@@ -8,3 +8,4 @@ Learnings:
 3. Show / hide forms
 4. Add eventListeners to dynamically generated elements
 5. Using data attribute
+6. Use class
