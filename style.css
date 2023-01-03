@@ -71,3 +71,14 @@ button.read_toggle {
     bottom: 0;
     left: 0;
 }
+
+/* validation */
+input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: red;
+}
+
+
+
+input:valid {
+    border-color: green;
+}
