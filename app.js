@@ -98,26 +98,29 @@ function _clearCurrentDiv() {
 function _createBookDiv(book, index) {
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
-    const h1Title = document.createElement("h1");
-    h1Title.textContent = `${book.title}`
-    bookDiv.appendChild(h1Title);
-    const h2Author = document.createElement("h2");
-    h2Author.textContent = `by ${book.author}`
-    bookDiv.appendChild(h2Author);
+    const title = document.createElement("h3");
+    title.textContent = `${book.title}`
+    bookDiv.appendChild(title);
+    const author = document.createElement("h4");
+    author.textContent = `by ${book.author}`
+    bookDiv.appendChild(author);
     const pages = document.createElement("p");
     pages.textContent = `${book.numOfPages} pages`
     bookDiv.appendChild(pages)
 
-    const readStatus = document.createElement("p");
+    const readStatus = document.createElement("div");
+    readStatus.classList.add("read_status");
+
     readStatus.textContent = `${book.read ? READ : NOT_READ}`
     readStatus.style.color = `${book.read ? READ_COLOR : NOT_READ_COLOR}`
-    bookDiv.appendChild(readStatus);
-    
+
     const readToggleBtn = document.createElement("button");
     readToggleBtn.classList.add("read_toggle");
     readToggleBtn.setAttribute("data-index", `${index}`);
     readToggleBtn.textContent = `${book.read ? MARK_NOT_READ_BTN : MARK_READ_BTN}`;
-    bookDiv.appendChild(readToggleBtn);
+    readStatus.appendChild(readToggleBtn);
+
+    bookDiv.appendChild(readStatus);
 
     const rmvButton = document.createElement("button");
     rmvButton.classList.add("remove");
@@ -150,7 +153,7 @@ form.addEventListener("submit", function(e) {
 
 function openForm() {
     document.querySelector("#container").style.display = "none";
-    document.querySelector("button.new_book").style.display = "none"
+    document.querySelector("#btn_div").style.display = "none"
 
     document.querySelector(".form_container > form").reset();
     document.querySelector(".form_container").classList.add("form_display");
@@ -159,8 +162,8 @@ function openForm() {
 function closeForm() {
     document.querySelector(".form_container").classList.remove("form_display");
 
-    document.querySelector("#container").style.display = "flex";
-    document.querySelector("button.new_book").style.display = "block"
+    document.querySelector("#container").style.display = "block";
+    document.querySelector("#btn_div").style.display = "flex"
 }
 
 

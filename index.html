@@ -10,7 +10,7 @@
     <script src="validation.js" defer></script>
 </head>
 <body>
-    <h1>Library</h1>
+    <h1>My Little Library</h1>
     <div id="btn_div">
         <button class="btn new_book">ADD NEW BOOK</button>
     </div>
@@ -18,7 +18,7 @@
     <div id="container"></div>
     <div class="form_container">
             <form action="index.html" method="post" id="addNew">
-              <h1>Submit a new book</h1>
+              <h3>SUBMIT A NEW BOOK</h3>
           
               <div>
                     <label for="title">Title</label>
@@ -31,7 +31,7 @@
               </div>
               
               <div>
-                    <label for="numOfPages">Number of Pages</label>
+                    <label for="numOfPages">Page Number</label>
                     <input type="text" placeholder="Enter number of pages" name="numOfPages" required>      
               </div>
               
@@ -45,8 +45,10 @@
                     <label for="no">No</label>
               </div>           
                           
-              <button type="submit">Submit</button>
-              <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+              <div class="form_btns">
+                    <button type="submit">SUBMIT</button>
+                    <button type="button" class="btn cancel" onclick="closeForm()">CLOSE</button>
+              </div>
             </form>
     </div>  
 </body>
