@@ -102,7 +102,7 @@ function _createBookDiv(book, index) {
     title.textContent = `${book.title}`
     bookDiv.appendChild(title);
     const author = document.createElement("h4");
-    author.textContent = `by ${book.author}`
+    author.textContent = `${book.author}`
     bookDiv.appendChild(author);
     const pages = document.createElement("p");
     pages.textContent = `${book.numOfPages} pages`

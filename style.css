@@ -39,7 +39,7 @@ button.new_book {
     font-weight: bold;
 
     white-space: nowrap;
-     overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
 
 }
@@ -108,6 +108,8 @@ div.form_btns {
 
 div.book {
     width: 70%;
+    min-width: 600px;
+
     height: auto;
     border: none;
     border-radius: 7px;
@@ -120,9 +122,26 @@ div.book {
     padding: 10px;
 }
 
+div.book > h3 {
+    width: 20%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.book > h4 {
+    width: 15%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .read_status {
     font-weight: bold;
     text-align: center;
+    width: 20%;
 }
 
 .read_toggle {
@@ -135,7 +154,9 @@ div.book {
     height: 2rem;
     padding: 5px;
     font: inherit;
+    font-size: .8rem;
     font-weight: 500;
+    margin: 5px auto;
 
     white-space: nowrap;
 }
@@ -144,11 +165,17 @@ div.book {
     border: none;
     border-radius: 5px;
     height: 1.8rem;
-    width: 7rem;
+
     padding: 5px;
     background-color: var(--button-color);
     color: white;
     font: inherit;
+    font-size: .8rem;
+    width: 10%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* validation */
