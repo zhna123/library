@@ -2,6 +2,10 @@
 A library simulation
 [Demo](https://zhna123.github.io/library/)
 
+Firebase hosting:
+[Demo](https://my-little-library-8e55d.web.app/)
+
+
 Learnings:
 1. Object, Object constructor, prototype
 2. window localStorage
