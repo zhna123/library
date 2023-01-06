@@ -1,0 +1,188 @@
+:root {
+    --main-font-color-dark: rgb(55, 53, 53);
+    --main-bg-color: bisque;
+    --button-color: rgb(184,72,60);
+    --form-color: rgb(166,189,158);
+  }
+
+html, body {
+    height: 100%;
+    font-family: "Gill Sans Extrabold", sans-serif;
+    background-color: var(--main-bg-color);
+}
+
+h1 {
+    text-align: center;
+    padding: 10px;
+    color: var(--main-font-color-dark);
+}
+
+button {
+    font: inherit
+}
+
+div#btn_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+button.new_book {
+    background-color: var(--button-color);
+    border: none;
+    border-radius: 7px;
+    width: 15%;
+    height: 70%;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+div.form_container {
+    display: none;
+    border: 3px solid var(--form-color);
+    border-radius: 7px;
+    width: 30%;
+    margin: auto;
+    padding: 10px;
+    color: var(--main-font-color-dark);
+}
+
+.form_container input[type=text] {
+    width: 100%;
+    height: 25px;
+    padding: 5px;
+    border: none;
+    box-shadow: 1px 1px 1px .5px lightgray;
+    border-radius: 5px;
+    margin: 10px auto;
+    font: inherit;
+}
+
+.form_container label {
+    font: inherit;
+}
+
+div.form_display {
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    width: 100%;
+    padding: 10px;
+}
+
+form > h3 {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+form > div, form > p {
+    margin: 10px;
+}
+
+div.form_btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.form_btns > button {
+    background-color: var(--button-color);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 80px;
+    height: 30px;
+    font-size: .9rem;
+}
+
+div.book {
+    width: 70%;
+    min-width: 600px;
+
+    height: auto;
+    border: none;
+    border-radius: 7px;
+    background-color: var(--form-color);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+div.book > h3 {
+    width: 20%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.book > h4 {
+    width: 15%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.read_status {
+    font-weight: bold;
+    text-align: center;
+    width: 20%;
+}
+
+.read_toggle {
+    display: block;
+    font-size: .5rem;
+    margin-top: 5px;
+    background-color: var(--button-color);color: white;
+    border: none;
+    border-radius: 5px;
+    height: 2rem;
+    padding: 5px;
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 500;
+    margin: 5px auto;
+
+    white-space: nowrap;
+}
+
+.remove {
+    border: none;
+    border-radius: 5px;
+    height: 1.8rem;
+
+    padding: 5px;
+    background-color: var(--button-color);
+    color: white;
+    font: inherit;
+    font-size: .8rem;
+    width: 10%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* validation */
+input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: red;
+}
+
+input:valid {
+    border-color: green;
+}

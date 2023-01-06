@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>My Little Library</h1>
+    <div id="btn_div">
+        <button class="btn new_book">ADD NEW BOOK</button>
+    </div>
+    
+    <div id="container"></div>
+    <div class="form_container">
+            <form action="index.html" method="post" id="addNew">
+              <h3>SUBMIT A NEW BOOK</h3>
+          
+              <div>
+                    <label for="title">Title</label>
+                    <input type="text" placeholder="Enter book title" name="title" id="title" required>
+              </div>
+              
+              <div>
+                    <label for="author">Author</label>
+                    <input type="text" placeholder="Enter author(s)" name="author" required>
+              </div>
+              
+              <div>
+                    <label for="numOfPages">Page Number</label>
+                    <input type="text" placeholder="Enter number of pages" name="numOfPages" required>      
+              </div>
+              
+              <p> Have you read it?</p>
+              <div>
+                    <input type="radio" id="yes" name="read" value="yes" checked>
+                    <label for="yes">Yes</label>
+              </div>
+              <div>
+                    <input type="radio" id="no" name="read" value="no">
+                    <label for="no">No</label>
+              </div>           
+                          
+              <div class="form_btns">
+                    <button type="submit">SUBMIT</button>
+                    <button type="button" class="btn cancel" >CLOSE</button>
+              </div>
+            </form>
+    </div>
+    
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        // Add Firebase products that you want to use
+        import { getFirestore, collection, doc, setDoc, addDoc, getDocs, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js'
+    
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxQ4prl3rKjE1fGDb1JppPXzTzm8C9VxU",
+            authDomain: "my-little-library-8e55d.firebaseapp.com",
+            projectId: "my-little-library-8e55d",
+            storageBucket: "my-little-library-8e55d.appspot.com",
+            messagingSenderId: "24213255540",
+            appId: "1:24213255540:web:fb4bb56e26ccee1c73e821"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app)
+
+        // ===================================== 
+
+        const READ = "READ";
+        const NOT_READ = "NOT READ";
+        const MARK_READ_BTN = "MARK READ";
+        const MARK_NOT_READ_BTN = "MARK NOT READ"
+        const REMOVE_BTN = "REMOVE";
+
+        const NOT_READ_COLOR = "rgb(184,72,60)";
+        const READ_COLOR = "green";
+
+        class Book {
+            constructor(title, author, numOfPages, read) {
+                this.title = title;
+                this.author = author;
+                this.numOfPages = numOfPages;
+                this.read = read;       
+            }
+
+            toggleReadStatus() {
+                this.read = !this.read;
+            }
+        }
+
+        // Firestore data converter
+        const bookConverter = {
+            toFirestore: (book) => {
+                return {
+                    title: book.title,
+                    author: book.author,
+                    numOfPages: book.numOfPages,
+                    read: book.read
+                    };
+            },
+            fromFirestore: (snapshot, options) => {
+                const data = snapshot.data(options);
+                return new Book(data.title, data.author, data.numOfPages, data.read);
+            }
+        };
+
+        class Library {
+
+            async addBookToLibrary(book) {
+                try {
+                    const docRef = doc(collection(db, "books")).withConverter(bookConverter);
+                    await setDoc(docRef, book);
+                } catch (e) {
+                    console.error("Error adding doc: ", e);
+                }
+            }
+
+            async getAllBooks() {
+                const querySnapshot = await getDocs(collection(db, "books"));
+                const allBooks = [];
+                querySnapshot.forEach((doc) => {
+                    allBooks.push(doc)
+                });
+                return allBooks;
+            }
+            
+            async displayBooks() {
+                const allBooks = await this.getAllBooks();
+                const containerDiv = _clearCurrentDiv();
+                allBooks.forEach(book => {
+                    containerDiv.appendChild(_createBookDiv(book.data(), book.id));
+                })
+            }
+            
+            async updateBooks(index) {
+
+                const bookRef = doc(db, "books", index).withConverter(bookConverter);
+                const bookSnap = await getDoc(bookRef);
+                const book = bookSnap.data();
+                book.toggleReadStatus();
+
+                await setDoc(bookRef, book);
+            
+                const containerDiv = _clearCurrentDiv();
+                containerDiv.textContent = '';
+                this.displayBooks();
+            }
+            
+            async removeBooks(index) {
+                await deleteDoc(doc(db, "books", index));
+            
+                _clearCurrentDiv();
+                this.displayBooks();
+            }
+        }
+
+        const library = new Library();
+        library.displayBooks();
+
+        // ============== DOM operations =====================
+
+        function _clearCurrentDiv() {
+            const containerDiv = document.querySelector("div#container");
+            // clear all current displayed books
+            containerDiv.textContent = '';
+            return containerDiv;
+        }
+
+        function _createBookDiv(book, index) {
+            const bookDiv = document.createElement("div");
+            bookDiv.classList.add("book");
+            const title = document.createElement("h3");
+            title.textContent = `${book.title}`
+            bookDiv.appendChild(title);
+            const author = document.createElement("h4");
+            author.textContent = `${book.author}`
+            bookDiv.appendChild(author);
+            const pages = document.createElement("p");
+            pages.textContent = `${book.numOfPages} pages`
+            bookDiv.appendChild(pages)
+
+            const readStatus = document.createElement("div");
+            readStatus.classList.add("read_status");
+
+            readStatus.textContent = `${book.read ? READ : NOT_READ}`
+            readStatus.style.color = `${book.read ? READ_COLOR : NOT_READ_COLOR}`
+
+            const readToggleBtn = document.createElement("button");
+            readToggleBtn.classList.add("read_toggle");
+            // add attribute to keep track item id
+            readToggleBtn.setAttribute("data-index", index);
+            readToggleBtn.textContent = `${book.read ? MARK_NOT_READ_BTN : MARK_READ_BTN}`;
+            readStatus.appendChild(readToggleBtn);
+
+            bookDiv.appendChild(readStatus);
+
+            const rmvButton = document.createElement("button");
+            rmvButton.classList.add("remove");
+            rmvButton.setAttribute("data-index", index)
+            rmvButton.textContent = REMOVE_BTN;
+            bookDiv.appendChild(rmvButton);
+                
+            return bookDiv;
+        }
+
+        // open form when click new book button
+        const newBookBtn = document.querySelector("button.new_book");
+        newBookBtn.addEventListener("click", function(e) {
+            openForm();
+        })
+
+        const form = document.querySelector("#addNew")
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const title = form.elements['title'].value;
+            const author = form.elements['author'].value;
+            const numOfPages = Number(form.elements['numOfPages'].value);
+            const read = form.elements['read'].value === 'yes' ? true : false;
+            const book = new Book(title, author, numOfPages, read);
+
+            library.addBookToLibrary(book);
+            closeForm();
+            library.displayBooks();
+        })
+
+        function openForm() {
+            document.querySelector("#container").style.display = "none";
+            document.querySelector("#btn_div").style.display = "none"
+
+            document.querySelector(".form_container > form").reset();
+            document.querySelector(".form_container").classList.add("form_display");
+        }
+        
+        function closeForm() {
+            document.querySelector(".form_container").classList.remove("form_display");
+
+            document.querySelector("#container").style.display = "block";
+            document.querySelector("#btn_div").style.display = "flex"
+        }
+
+        const cancelBtn = document.querySelector("button.cancel");
+        cancelBtn.addEventListener("click", function(e) {
+            closeForm();
+        })
+
+
+        // need to select parent container because the remove and update read buttons 
+        // are dynamically generated each time a new book added
+        const bookDivContainer = document.querySelector("div#container");
+        bookDivContainer.addEventListener("click", function(e) {
+            const targetElement = e.target;
+            if (targetElement.className === 'remove') {
+                const index = targetElement.dataset.index;
+                library.removeBooks(index)
+            }
+            
+            if (targetElement.className === 'read_toggle') {
+                const index = targetElement.dataset.index;
+                library.updateBooks(index)
+            }
+        })
+
+
+        // validations
+        const titleInput = document.querySelector("input#title");
+
+        titleInput.addEventListener('input', () => {
+            titleInput.setCustomValidity('');
+            titleInput.checkValidity();
+        })
+
+        titleInput.addEventListener('invalid', () => {
+            if(titleInput.value === '') {
+                titleInput.setCustomValidity('Please enter a book title.')
+            } 
+        })
+    </script>
+</body>
+</html>
